@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Florence.TaxExemptEmployee>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Index";
+    var gridName = Model.GetType().FullName + "Grid";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @Html.Grid(Model).Named(gridName).Columns(columns =>
+                       {
+                       var exceptionList = Florence.Models.GridColumnsExceptionModel.GetColumnException(Model.GetType().GetProperty("Item").PropertyType);
+
+                       foreach (var prop in Model.GetType().GetProperty("Item").PropertyType.GetProperties().Where(x => !exceptionList.Contains(x.Name)))
+                       {
+                           if (prop.Name.Equals("id"))
+                           {
+                               columns.Add(x => x.id).Titled("id");
+                           }
+                           else if(prop.Name.Equals("Employee")){
+                               columns.Add().RenderValueAs(x => Employee.GetName(x.Employee)).Titled("Employee");
+                           }
+                           else
+                           {
+                               columns.Add(prop).Titled(DisplayNameHelper.GetDisplayName(prop));
+                           }
+
+                       }
+                       
+                       columns.Add()
+                               .Encoded(false)
+                               .Sanitized(false)
+                               .SetWidth(30)
+                               .Titled("Delete")
+                               .RenderValueAs(x => @<button class="btn btn-sm btnTaxExemptEmployeeDelete" value="@x.id"><i class="fa fa-trash"></i></button>);
+                       }
+
+                           ).WithPaging(20)
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        
+        $(".btnTaxExemptEmployeeDelete").click(function (e) {
+            if (confirm("Delete this Employee?")) {
+                $.ajax({
+                    type: "POST",
+                    url: '/TaxExemptEmployee/Delete?id=' + this.value.toString(),
+                    success: function (data) {
+                        toastr.success('Deleted Success!', 'Notification');
+                        window.location.herf = "/TaxExemptEmployee/";
+                    }
+                });
+            }
+        });
+    });
+</script>
+

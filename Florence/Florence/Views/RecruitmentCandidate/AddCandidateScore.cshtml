@@ -1,0 +1,135 @@
+﻿@model Florence.CandidateScore
+
+@using (Html.BeginForm())
+{
+    
+    @Html.AntiForgeryToken()
+ 
+    @Html.HiddenFor(model => model.LinkID)   
+    <div class="form-horizontal">
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.DressCode, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DressCode, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.DressCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Attitude, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Attitude, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.Attitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CommunicationSkills, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CommunicationSkills, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.CommunicationSkills, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TechnicalKnowledge, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TechnicalKnowledge, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.TechnicalKnowledge, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Confidence, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Confidence, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.Confidence, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Potential, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Potential, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.Potential, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LearningAbility, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LearningAbility, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.LearningAbility, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MentalCapacity, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MentalCapacity, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.MentalCapacity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AnalytialApproach, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AnalytialApproach, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.AnalytialApproach, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WillingnessToWork, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.WillingnessToWork, new { htmlAttributes = new { @class = "form-control slider" } })
+                @Html.ValidationMessageFor(model => model.WillingnessToWork, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        
+
+        <div class="form-group">
+            <div class="">
+                <input type="button" id="btnSaveCandidateScore" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+        $(document).ready(function() {
+            var slider = $(".slider").kendoSlider({
+                increaseButtonTitle: "Right",
+                decreaseButtonTitle: "Left",
+                min: 0,
+                max: 10,
+                smallStep: 1,
+                largeStep: 1
+            }).data("kendoSlider");
+
+            $("#btnSaveCandidateScore").click(function () {
+                saveCandidateScore();
+                $("#" + _addCandateRate).data("kendoWindow").close();
+            });
+        });
+</script>
+
+<style>
+    .control-label {
+        text-align: center;
+    }
+
+    .form-horizontal {
+        text-align: center;
+    }
+
+    div.form-control {
+        width: 100%;
+    }
+
+    div.balSlider .k-slider-selection {
+        display: none;
+    }
+</style>

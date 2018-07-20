@@ -1,0 +1,85 @@
+﻿@model Florence.Transfer
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Transfer</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.id)
+        <div class="form-group">
+            @Html.LabelFor(model => model.EmployeeToTransfer, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.EmployeeToTransfer, new SelectList(Employee.GetAll(), "id", "FullName"), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EmployeeToTransfer, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ForwardApplicationTo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ForwardApplicationTo, new SelectList(Employee.GetAll(), "id", "FullName"), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ForwardApplicationTo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TransferDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Kendo().DatePickerFor(model => model.TransferDate).HtmlAttributes(new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TransferDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TransferToDepartment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TransferToDepartment, new SelectList(AdminDepartment.GetAll(), "id", "Name"), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TransferToDepartment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="ibox-content no-padding">
+                @Html.LabelFor(model => model.TransferDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+
+                
+                @(Html.Kendo().EditorFor(x => x.TransferDescription)
+      .Name("TransferDescription")
+      .HtmlAttributes(new { style = "height:440px" })
+      .Resizable(resizable => resizable.Content(true).Toolbar(true))
+      .Value(HttpUtility.HtmlDecode( Model.TransferDescription))
+                )
+            </div>
+        </div>
+
+        
+
+        
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    $(document).ready(function () {
+        genericInit();
+    });
+</script>

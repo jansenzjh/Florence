@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Florence.Contract>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Index";
+    var gridName = Model.GetType().FullName + "Grid";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @Html.Grid(Model).Named(gridName).Columns(columns =>
+                       {
+                       columns.Add(x => x.ContractType).Titled("Contract Type");
+                       columns.Add().RenderValueAs(x => Employee.GetName(x.EmployeeID)).Titled("Employee");
+                       columns.Add(x => x.Designation).Titled("Designation");
+                       columns.Add(x => x.EmployeeType).Titled("Emp. Type");
+                       columns.Add().RenderValueAs(x => AdminDepartment.DepartmentName(x.Department)).Titled("Type");
+                       
+
+                       columns.Add()
+                                .Encoded(false)
+                                .Sanitized(false)
+                                .SetWidth(30)
+                                .Titled("Edit")
+                                .RenderValueAs(x => @<a class="btn btn-sm" href="@Url.Action("Edit", new { id = x.id})"><i class="fa fa-pencil"></i></a>);
+
+                       columns.Add()
+                                .Encoded(false)
+                                .Sanitized(false)
+                                .SetWidth(30)
+                                .Titled("Details")
+                                .RenderValueAs(x => @<a class="btn btn-sm" href="@Url.Action("Details", new { id = x.id})"><i class="fa fa-file-text"></i></a>);
+                       }
+
+                           ).WithPaging(20)
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

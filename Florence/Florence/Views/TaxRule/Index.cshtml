@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Florence.TaxRule>
+
+
+
+<div class="ibox-content">
+    <div class="">
+        <button id="btnCreateTaxRule" type="button" class="btn btn-success btn-outline">New Tax Rule</button>
+        @Html.DropDownList("TaxRuleDropdown", new SelectList(TaxRule.TaxRuleList(true)))
+        
+    </div>
+    <div id="TaxRuleDetail">
+
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#TaxRuleDropdown").kendoDropDownList({
+            change: TaxRuleDropdownOnChange
+        });
+
+        $("#btnCreateTaxRule").click(function () {
+            $("#TaxRuleDetail").load('@(Url.Action("Create", "TaxRule", null, Request.Url.Scheme))');
+        });
+
+    });
+
+    function TaxRuleDropdownOnChange(e) {
+        var title = encodeURIComponent($("#TaxRuleDropdown").val());
+        if (title.length > 0) {
+            $("#TaxRuleDetail").load('@(Url.Action("TaxRuleDetailView", "TaxRule", null, Request.Url.Scheme))?title=' + title);
+        }
+
+    }
+
+</script>
+

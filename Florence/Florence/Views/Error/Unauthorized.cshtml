@@ -1,0 +1,9 @@
+﻿@model string
+@{
+    ViewBag.Title = "Unauthorized";
+}
+
+<h2>Unauthorized</h2>
+
+<div>You don't have the access to "@ViewData["Error"]", please contact your administrator! @Html.ActionLink("Go back to Home Page", "Index", "Home")</div>
+

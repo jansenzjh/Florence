@@ -1,0 +1,82 @@
+﻿@model Florence.CandidateReference
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editReferenceForm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>CandidateReference</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.id)
+
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Organization, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Organization, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Organization, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="btnEditReferenceForm" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#btnEditReferenceForm").click(function (e) {
+            var obj = {
+                LinkID: $("#LinkID").val(),
+                Name: $("#editReferenceForm #Name").val(),
+                Organization: $("#editReferenceForm #Organization").val(),
+                Phone: $("#editReferenceForm #Phone").val(),
+                Email: $("#editReferenceForm #Email").val()
+
+            }
+            _referenceArr.push(obj);
+            if (_referenceArr.length == 1) {
+                generateReferenceGrid();
+            } else {
+                reloadGridData("referenceGrid", _referenceArr)
+            }
+
+            $("#" + _addReference).data("kendoWindow").close();
+        });
+
+
+
+    });
+
+
+</script>

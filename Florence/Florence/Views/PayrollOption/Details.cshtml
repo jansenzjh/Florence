@@ -1,0 +1,147 @@
+﻿@model Florence.PayrollOption
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Details <small>With all properties</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <form method="get" class="form-horizontal">
+                        @foreach (var property in Model.GetType().GetProperties().Where(x => !new string[] { "id", "DepartmentSID","CreatedBy" }.Contains(x.Name)))
+                        {
+                            <div class="form-group">
+                                @Html.Label(property.Name, new { @class = "col-lg-2 control-label" })
+                                @{
+                                    if (property.Name.Equals("id"))
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Model.id</p></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Html.Display(property.Name)</p></div>
+                                    }
+
+                                }
+
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                                    }
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
+</div>
+
+<div>
+    <h4>PayrollOption</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PayrollMethod)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PayrollMethod)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AutoApprovePayroll)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AutoApprovePayroll)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PayrollApprovedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PayrollApprovedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AutoEmailPayslips)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AutoEmailPayslips)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PerDaySalaryCalculation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PerDaySalaryCalculation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfDayInMonth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfDayInMonth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PayrollCurrency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PayrollCurrency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PayslipTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PayslipTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PayslipFormat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PayslipFormat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BasicSalaryTYpe)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BasicSalaryTYpe)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BasicSalaryPercentage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BasicSalaryPercentage)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,36 @@
+﻿
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Please Select Candidates<small>   Details will be showed up after selection</small></h5>
+                    
+                </div>
+                <div class="ibox-content">
+                    <div>
+                        @Html.DropDownList("RecruitmentCandidateDropDown", new SelectList(JobPost.GetAll(true), "JobTitle", "JobTitle", ""))
+                    </div>
+                    <div id="RecruitmentCandidateList">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#RecruitmentCandidateDropDown").kendoDropDownList({
+            change: RecruitmentCandidateDropDown
+        });
+    });
+
+    function RecruitmentCandidateDropDown(e) {
+        var jobPostId = encodeURIComponent($("#RecruitmentCandidateDropDown").val());
+        $("#RecruitmentCandidateList").load('@(Url.Action("CandidateListPreview", "RecruitmentCandidate", null, Request.Url.Scheme))?jobPostId=' + jobPostId);
+    }
+</script>

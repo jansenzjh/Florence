@@ -1,0 +1,72 @@
+﻿@model Florence.ProvidentFund
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ProvidentFund</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployeeShareAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmployeeShareAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployeeSharePersentage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmployeeSharePersentage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrganizationShareAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrganizationShareAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrganizationSharePersentage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrganizationSharePersentage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

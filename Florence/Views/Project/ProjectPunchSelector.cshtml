@@ -1,0 +1,33 @@
+﻿@using GridMvc.Html
+@{
+    var uid = SessionItems.CurrentUser.UserID;
+    var currentWorkingProjectActivity = new ProjectActivity().GetObjectValueFromExpression(x => x.UserID == uid && x.StartTime == x.EndTime, x => x.StartTime, true);
+    var allProjects = Project.GetAll();
+}
+
+<div class="modal inmodal" id="projSelectorModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            
+            <div class="modal-body">
+                @Html.Grid(allProjects).Named("AllProjectGrid").Columns(columns =>
+                {
+                   
+                   columns.Add(x => x.Name);
+                   columns.Add(x => x.Description);
+
+                   columns.Add()
+                            .Encoded(false)
+                            .Sanitized(false)
+                            .SetWidth(30)
+                            .Titled("Edit")
+                            .RenderValueAs(x => @<a data-dismiss="modal" class="btn btn-sm" href="#" onclick="punchIntoProject(@x.id)">Punch In</a>);
+               
+               }).WithPaging(20)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

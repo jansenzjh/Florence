@@ -1,0 +1,170 @@
+﻿
+@model IEnumerable<Florence.TaxRule>
+@{ 
+    var defaultTaxRuleRowCount = 7;
+    var ruleTitle = Model.FirstOrDefault().RuleName;
+}
+
+<div class="wrapper-content">
+    <div class="row show-grid">
+        <input class="txt-string" name="RuleName" value="@ruleTitle" placeholder="Tax Rule Title" />
+    </div>
+    
+
+
+    <div class="row show-grid">
+
+        <div class="col-md-2">
+            Salary From
+        </div>
+        <div class="col-md-2">
+            Salary To
+        </div>
+        <div class="col-md-2">
+            Tax Percentage
+        </div>
+        <div class="col-md-2">
+            Exempted Tax Amount
+        </div>
+        <div class="col-md-2">
+            Additional Tax Amount
+        </div>
+    </div>
+
+    @{
+
+        foreach (var tr in Model.OrderBy(x => x.SalaryFrom).ToList())
+        {
+            <div class="row show-grid TaxRuleDetail">
+                <div class="col-md-2">
+                    <input class="txt-currency" name="SalaryFrom" value="@tr.SalaryFrom" />
+                </div>
+                <div class="col-md-2">
+                    <input class="txt-currency" name="SalaryTo" value="@tr.SalaryTo" />
+                </div>
+                <div class="col-md-2">
+                    <input class="txt-persentage" name="TaxPercentage" value="@tr.TaxPercentage" />
+                </div>
+                <div class="col-md-2">
+                    <input class="txt-currency" name="ExemptedTaxAmount" value="@tr.ExemptedTaxAmount" />
+                </div>
+                <div class="col-md-2">
+                    <input class="txt-currency" name="AdditionalTaxAmount" value="@tr.AdditionalTaxAmount" />
+                </div>
+            </div>
+
+        }
+
+        if (Model.Count() < defaultTaxRuleRowCount)
+        {
+            for (int i = 0; i < defaultTaxRuleRowCount - Model.Count(); i++)
+            {
+                <div class="row show-grid TaxRuleDetail">
+                    <div class="col-md-2">
+                        <input class="txt-currency" name="SalaryFrom" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-currency" name="SalaryTo" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-persentage" name="TaxPercentage" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-currency" name="ExemptedTaxAmount" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-currency" name="AdditionalTaxAmount" value="" />
+                    </div>
+                </div>
+            }
+        }
+    }
+
+    <div class="row">
+        <button id="btnSaveTaxRule" type="button" class="btn btn-primary btn-outline">Save Current Rule</button>
+        <button id="btnDeleteTaxRule" type="button" class="btn btn-danger btn-outline">Delete Current Rule</button>
+    </div>
+
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+        $("#btnSaveTaxRule").click(function () {
+            saveTaxRule("@ruleTitle");
+        });
+        $("#btnDeleteTaxRule").click(function () {
+            deleteTaxRule("@ruleTitle");
+        });
+
+
+        //format text
+        $(".txt-string").kendoMaskedTextBox({
+
+        });
+        //format currency
+        $(".txt-currency").kendoNumericTextBox({
+            format: "c",
+            decimals: 3
+        });
+
+        //format persentage
+        $(".txt-persentage").kendoNumericTextBox({
+            format: "p0",
+            min: 0,
+            max: 1,
+            step: 0.01
+        });
+    });
+
+    function saveTaxRule(title) {
+        var objs = new Array();
+        var linkID = Math.uuid();
+        $(".TaxRuleDetail").each(function (i, e) {
+            var obj = {
+                RuleName: title,
+                TaxFormat: "General",
+                SalaryFrom: $(e).find("[name=SalaryFrom]").val(),
+                SalaryTo: $(e).find("[name=SalaryTo]").val(),
+                TaxPercentage: $(e).find("[name=TaxPercentage]").val(),
+                ExemptedTaxAmount: $(e).find("[name=ExemptedTaxAmount]").val(),
+                AdditionalTaxAmount: $(e).find("[name=AdditionalTaxAmount]").val(),
+                LinkID: linkID
+            };
+            objs.push(obj);
+        });
+
+        objs = Enumerable.From(objs).Where(function (x) { return x.TaxPercentage > 0 || x.ExemptedTaxAmount > 0 || x.AdditionalTaxAmount > 0 }).ToArray();
+
+        $.ajax({
+            type: "POST",
+            url: '/TaxRule/Edit',
+            data: { objs: objs },
+            success: function (data) {
+                console.log(data);
+                toastr.success("Tax Rule Save successfully!", "Notification!");
+
+            }
+        });
+    }
+
+    function deleteTaxRule(title) {
+        if (confirm("Are you sure?")) {
+            $.ajax({
+                type: "POST",
+                url: '/TaxRule/Delete',
+                data: { title: title },
+                success: function (data) {
+                    console.log(data);
+                    toastr.success("Tax Rule delete successfully!", "Notification!");
+                    $("#payrollStructure-4").load('@(Url.Action("Index", "TaxRule", null, Request.Url.Scheme))');
+                }
+            });
+        }
+        
+    }
+
+</script>

@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Florence.AdminDepartment>
+@using GridMvc.Html
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Index";
+    var gridName = Model.GetType().FullName + "Grid";
+}
+
+<h2>Departments</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+
+
+<div class="row">
+    <div class="col-lg-9">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @Html.Grid(Model).Named("DepartmentGrid").Columns(columns =>
+                        {
+                            columns.Add(x => x.id, true).Titled("id");
+                            columns.Add(x => x.ParentID.Name).Titled("Company");
+                            columns.Add(x => x.Name).Titled("Name").SetWidth(200).Sortable(true);
+                            columns.Add(x => x.DeptCode).Titled("DeptCode");
+                            columns.Add(x => x.Tel).Titled("Phone");
+                            columns.Add(x => x.Fax).Titled("Fax");
+                            columns.Add(x => x.Email).Titled("Email");
+                            columns.Add(x => x.IsActive).Titled("IsActive");
+                            columns.Add(x => x.IsDir).Titled("IsDir");
+
+                        }).WithPaging(20)
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        @{
+            foreach (var dpt in Model)
+            {
+                <div class="wrapper wrapper-content department" hidden id="department_@dpt.id.ToString()">
+                    <h4>@dpt.Name</h4>
+                    @*<img src="~/Images/zender_logo.png" class="img-responsive">*@
+                    <p class="small">
+                        @dpt.Responsibility
+                    </p>
+                    <p class="small">
+                        @dpt.Memo
+                    </p>
+                    <p class="small font-bold">
+                        <span><i class="fa fa-circle text-warning"></i> @dpt.IsActive</span>
+                    </p>
+                    
+                    <h5>Information</h5>
+                    <ul class="list-unstyled">
+                        <li>Phone: @dpt.Tel</li>
+                        <li>Fax: @dpt.Fax</li>
+                        <li>Email: @dpt.Email</li>
+                        <li>Address: @dpt.Addr</li>
+                        <li>Zip: @dpt.PostCode</li>
+                        <li>isDir: @dpt.IsDir</li>
+                        <li>Address: @dpt.Addr</li>
+                    </ul>
+                    <div class="text-center m-t-md">
+                        <a class="btn btn-white btn-sm" href="@Url.Action("Edit", new { id = dpt.id})"><i class="fa fa-pencil"></i></a>
+
+                    </div>
+                </div>
+            }
+        }
+        
+    </div>
+</div>
+
+<script>
+    
+
+    $(function () {
+        pageGrids.DepartmentGrid.onRowSelect(function (e) {
+            $(".department").hide();
+            $("#department_" + e.row.id.toString()).show();
+        });
+    });
+</script>
+                      

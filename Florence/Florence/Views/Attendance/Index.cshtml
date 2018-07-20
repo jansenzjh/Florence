@@ -1,0 +1,106 @@
+﻿@model IEnumerable<Florence.Attendance>
+
+
+@{
+    ViewBag.Title = "Index";
+    var gridName = Model.GetType().FullName + "Grid";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <form role="form" class="form-inline">
+                        <div class="form-group">
+                            <label for="exampleInputEmail2" class="sr-only">Employee: </label>
+                            @Html.DropDownList("TimePunchEmployeeDropdown", new SelectList(SessionItems.AllUsers, "UserId", "FullName"))
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword2" class="sr-only">Date Range</label>
+                            <div id="reportrange" class="form-control">
+                                <i class="fa fa-calendar"></i>
+                                <span></span> <b class="caret"></b>
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnTimePunchEmployee" class="btn btn-outline btn-primary">Primary</button>
+                    </form>
+
+
+                    <div id="attendanceGuid">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Scripts.Render("~/plugins/dateRange")
+@Styles.Render("~/plugins/dateRangeStyles")
+<script>
+
+    $(document).ready(function(){
+        genericInit();
+
+        $("#btnTimePunchEmployee").click(function () {
+            var userID = $("#TimePunchEmployeeDropdown").val();
+            $("#attendanceGuid").load('@(Url.Action("AttendanceUserDetail", "Attendance", null, Request.Url.Scheme))?userID=' + userID + '&startDate=' + startDay + '&endDate=' + endDay);
+        });
+
+        var startDay = '';
+        var endDay = '';
+
+        $('#reportrange').daterangepicker({
+            format: 'MM/DD/YYYY',
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment(),
+            //minDate: '01/01/2012',
+            //maxDate: '12/31/2015',
+            //dateLimit: { days: 60 },
+            showDropdowns: true,
+            showWeekNumbers: true,
+            timePicker: false,
+            timePickerIncrement: 1,
+            timePicker12Hour: true,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            opens: 'right',
+            drops: 'down',
+            buttonClasses: ['btn', 'btn-sm'],
+            applyClass: 'btn-primary',
+            cancelClass: 'btn-default',
+            separator: ' to ',
+            locale: {
+                applyLabel: 'Submit',
+                cancelLabel: 'Cancel',
+                fromLabel: 'From',
+                toLabel: 'To',
+                customRangeLabel: 'Custom',
+                daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                firstDay: 1
+            }
+        }, function (start, end, label) {
+            startDay = start.format("MM/DD/YYYY");
+            endDay = end.format("MM/DD/YYYY");
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        });
+
+    });
+
+
+</script>

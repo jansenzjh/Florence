@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Florence.Attendance>
+@using GridMvc.Html
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @Html.Grid(Model).Named("AttendanceUserDetail").Columns(columns =>
+                       {
+                       
+                           columns.Add(x => x.PunchDateTime).Titled("PunchDateTime");
+                           columns.Add(x => x.CurrentPunchType).Titled("CurrentPunchType");
+                           
+                       }
+
+                           ).WithPaging(100)
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

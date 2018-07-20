@@ -1,0 +1,115 @@
+﻿@model Florence.TaxRule
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Details <small>With all properties</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <form method="get" class="form-horizontal">
+                        @foreach (var property in Model.GetType().GetProperties().Where(x => !new string[] { "id", "DepartmentSID","CreatedBy" }.Contains(x.Name)))
+                        {
+                            <div class="form-group">
+                                @Html.Label(property.Name, new { @class = "col-lg-2 control-label" })
+                                @{
+                                    if (property.Name.Equals("id"))
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Model.id</p></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Html.Display(property.Name)</p></div>
+                                    }
+
+                                }
+
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                                    }
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
+</div>
+
+<div>
+    <h4>TaxRule</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RuleName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RuleName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaxFormat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaxFormat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SalaryFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SalaryFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SalaryTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SalaryTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaxPercentage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaxPercentage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExemptedTaxAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExemptedTaxAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdditionalTaxAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdditionalTaxAmount)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

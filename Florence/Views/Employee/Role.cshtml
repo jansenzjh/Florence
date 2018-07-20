@@ -1,0 +1,84 @@
+﻿
+
+
+<link href="@Url.Content("~/Content/multi-select.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery.multi-select.js")" type="text/javascript"> </script>
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Employee Role Edit <small>Please select the employee and select their roles</small></h5>
+                    
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        @Html.DropDownList("RoleEmployee", new SelectList(Employee.GetAll(true), "id", "FullName"), new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="row">
+                        @Html.ListBox("EmployeeRoleSelect", new MultiSelectList(Florence.Roles.GetAll(), "RoleId", "RoleName"), new { size = 80 })
+                    </div>
+                    <div>
+                        <input type="button" id="btnSaveEmployeeRoles" value="Save" class="btn btn-primary">
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#RoleEmployee").kendoDropDownList({});
+
+        $('#EmployeeRoleSelect').multiSelect(
+            {
+                selectableHeader: "<div class='custom-header'>Available Roles</div>",
+                selectionHeader: "<div class='custom-header'>Current Roles</div>"
+            }
+        );
+
+        $("#btnSaveEmployeeRoles").click(function () {
+            var emp = $("#RoleEmployee").val();
+            var roles = $("#EmployeeRoleSelect").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Employee/SaveRoles",
+                data: {
+                    employee: emp,
+                    empRoles : roles
+                },
+                success: function (data) {
+                    toastr.success('Employee Roles Save Success!', 'Notification')
+                }
+            });
+        });
+
+        $("#RoleEmployee").change(function () {
+            $('#EmployeeRoleSelect').multiSelect('deselect_all');
+            var emp = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Employee/GetUserRoles",
+                data: {
+                    employee: emp
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data != null && data.length > 0) {
+                        $(data).each(function (i, e) {
+                            $('#EmployeeRoleSelect').multiSelect('select', e.toString());
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>

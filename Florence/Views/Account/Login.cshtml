@@ -1,0 +1,66 @@
+﻿@using Florence.Models
+@model LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HRMS | Login</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div>
+
+                <h1 class="logo-name">HRMS</h1>
+
+            </div>
+            <h3>Welcome to HRMS</h3>
+            <p>
+                Perfectly designed and precisely prepared Human Resources Management System, which contains more than 50 functionality for HR management daily usage.
+            </p>
+            <p>Login in. To see it in action.</p>
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @*<input type="email" class="form-control" placeholder="Username" required="">*@
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder="Username" })
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @*<input type="password" class="form-control" placeholder="Password" required="">*@
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" , @placeholder="Password"})
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+
+                <a href="#"><small>Forgot password?</small></a>
+                <p class="text-muted text-center"><small>Do not have an account?</small></p>
+                <a class="btn btn-sm btn-white btn-block" href="@Url.Action("Register", "Account")">Create an account</a>
+             }
+            <p class="m-t"> <small>HRMS brought to you by JZSoft &copy; @DateTime.Today.Year.ToString()</small> </p>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+

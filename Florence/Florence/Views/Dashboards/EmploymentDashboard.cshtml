@@ -1,0 +1,91 @@
+﻿@model IEnumerable<Florence.SPEmployeeDashboardModel>
+@{
+    ViewBag.Title = "EmploymentDashboard";
+}
+
+
+
+@*<div class="wrapper wrapper-content animated fadeInRight">
+    <div id="output">
+
+    </div>
+</div>
+
+@Scripts.Render("~/plugins/chartjs")
+<script>
+    
+    $(document).ready(function () {
+        
+        $("#output").pivotUI(
+            
+                @Html.Raw(Json.Encode(Model)),
+            {
+                rows: [""],
+                cols: [""]
+            }
+        );
+
+    });
+
+</script>*@
+
+
+<div class="responsive-message"></div>
+
+@(Html.Kendo().PivotConfigurator()
+    .HtmlAttributes(new { @class = "hidden-on-narrow" })
+    .Name("configurator")
+    .Filterable(true)
+    .Sortable()
+    .Height(570)
+)
+
+@(Html.Kendo().PivotGrid<SPEmployeeDashboardModel>()
+    .Name("pivotgrid")
+    .HtmlAttributes(new { @class = "hidden-on-narrow" })
+    .Filterable(true)
+    .Sortable()
+    .Configurator("#configurator")
+    .ColumnWidth(120)
+    .Height(570)
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Transport(transport => transport.Read("Customers_Read", "PivotGrid"))
+        .Schema(schema => schema
+            .Cube(cube => cube
+                .Dimensions(dimensions =>
+                {
+                    dimensions.Add(model => model.Amount).Caption("Amount");
+                    dimensions.Add(model => model.Category).Caption("Category");
+                    dimensions.Add(model => model.EmployeeName).Caption("Name");
+                    dimensions.Add(model => model.Gender).Caption("Gender");
+                })
+                .Measures(measures => measures.Add("Contacts Count").Field(model => model.EmployeeName).AggregateName("count"))
+            ))
+        .Columns(columns =>
+        {
+            columns.Add("Country").Expand(true);
+            columns.Add("CompanyName");
+        })
+        .Rows(rows => rows.Add("ContactTitle").Expand(true))
+        .Measures(measures => measures.Values("Contacts Count"))
+    )
+)
+
+<style>
+    #pivotgrid {
+        display: inline-block;
+        vertical-align: top;
+        width: 70%;
+    }
+
+    #configurator {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .hidden-on-narrow {
+        display: inline-block;
+        vertical-align: top;
+    }
+</style>

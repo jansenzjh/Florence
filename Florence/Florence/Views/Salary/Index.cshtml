@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Florence.Salary>
+
+@{ 
+    
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        @Html.DropDownList("EmployeeList", new SelectList(SessionItems.AllUsers, "id", "FullName"))
+                    </div>
+                    <div class="row">
+                        <div id="salary-detail">
+                                    
+                        </div>
+                            
+                    </div>
+                    <div class="row">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#EmployeeList").kendoDropDownList({
+            change: EmployeeDropdownOnChange
+        });
+
+        
+
+    });
+
+    function EmployeeDropdownOnChange(e) {
+        var employeeID = encodeURIComponent($("#EmployeeList").val());
+        if (employeeID.length > 0) {
+            $("#salary-detail").load('@(Url.Action("SalaryDetailView", "Salary", null, Request.Url.Scheme))?employeeID=' + employeeID);
+        }
+
+    }
+
+</script>

@@ -1,0 +1,219 @@
+﻿@model Florence.SalaryPayslip
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("Edit", "SalaryPayslip", FormMethod.Post, new { id = "SalaryPayslipForm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>SalaryPayslip</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.id)
+        @Html.HiddenFor(model => model.InstanceID)
+        @Html.HiddenFor(model => model.CreatedAt)
+        @Html.HiddenFor(model => model.CreatedBy)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employee, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Employee, new SelectList(Employee.GetAll(), "id", "FullName"), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Employee, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SalaryDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Kendo().DatePickerFor(model => model.SalaryDate).HtmlAttributes(new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SalaryDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Kendo().DatePickerFor(model => model.StartDate).HtmlAttributes(new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Kendo().DatePickerFor(model => model.EndDate).HtmlAttributes(new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="detail-content">
+            <div class="row show-grid">
+
+                <div class="col-md-2">
+                    Salary Item
+                </div>
+                <div class="col-md-2">
+                    Amount
+                </div>
+
+            </div>
+
+            <div class="detail-group">
+                @foreach (var dt in Model.Details)
+                {
+
+                    <div class="row show-grid model-detail">
+                        <div class="hidden hidden-detail">
+                            <input name="id" value="@dt.id" />
+                            <input name="InstanceID" value="@dt.InstanceID" />
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-string" name="SalaryItem" value="@dt.SalaryItem" />
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-currency" name="Amount" value="@dt.Amount" />
+                        </div>
+                    </div>
+
+                }
+
+
+            </div>
+
+            <div class="backup-detail-row hidden">
+                <div class="row show-grid model-detail">
+                    <div class="col-md-2">
+                        <input class="txt-string" name="SalaryItem" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-currency" name="Amount" value="" />
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+
+        <div class="row">
+            <button id="btnAddDetailRow" type="button" class="btn btn-primary btn-outline">Add</button>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        
+
+        
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="btnSalarySlipEdit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("div select").kendoDropDownList({});
+        $("#Amount").kendoNumericTextBox({
+            format: "c",
+            decimals: 3
+        });
+
+        //format textbox
+        $(".detail-group .txt-currency").kendoNumericTextBox({
+            format: "c",
+            decimals: 3
+        });
+        $(".detail-group .txt-date").kendoDatePicker({});
+        $(".detail-group .txt-string").kendoMaskedTextBox({});
+        
+
+        //Button Action
+        $("#btnAddDetailRow").click(function () {
+            //get the html
+            var html = $(".backup-detail-row").html();
+
+            //get new uuid
+            var guid = Math.uuid();
+            //add uuid as new html class
+            var newHTML = $($(".backup-detail-row").html()).closest(".model-detail").addClass(guid);
+
+            //append html with new class
+            $(".detail-group").append(newHTML);
+
+            //use new guid as new html class and format the telerik(sigh~~~~)
+            $(".{0} .txt-currency".format(guid.toString())).kendoNumericTextBox({
+                format: "c",
+                decimals: 3
+            });
+            $(".{0} .txt-date".format(guid.toString())).kendoDatePicker({});
+            $(".{0} .txt-string".format(guid.toString())).kendoMaskedTextBox({});
+
+            $(".{0} select".format(guid.toString())).kendoDropDownList({});
+
+        });
+
+        $("#btnSalarySlipEdit").click(function () {
+            var linkID = $("#InstanceID").val()
+            var sp = {
+                id: $("#id").val(),
+                InstanceID: linkID,
+                Employee: $("#Employee").val(),
+                SalaryDate: $("#SalaryDate").val(),
+                StartDate: $("#StartDate").val(),
+                EndDate: $("#EndDate").val(),
+                Note: $("#SalaryPayslipForm #Note").val(),
+                CreatedAt: $("#SalaryPayslipForm #CreatedAt").val(),
+                CreatedBy: $("#SalaryPayslipForm #CreatedBy").val()
+            };
+
+            var details = new Array();
+            $(".model-detail").each(function (i, e) {
+                var obj = {
+                    id: $(e).find("[name=id]").val(),
+                    InstanceID: linkID,
+                    Amount: $(e).find("[name=Amount]").val(),
+                    SalaryItem: $(e).find("[name=SalaryItem]").val()
+                }
+                console.log(obj);
+                details.push(obj);
+            });
+
+
+            details = Enumerable.From(details).Where(function (x) { return x.Amount > 0 }).ToArray();
+            $.ajax({
+                type: "POST",
+                url: '/SalaryPayslip/Edit',
+                data: {
+                    model: sp,
+                    details: details
+                },
+                success: function (data) {
+                    console.log(data);
+                    toastr.success("Payslip Save Successfully!", "Notification!");
+                    window.location.href = "/SalaryPayslip/Index";
+                }
+            });
+        });
+    });
+</script>

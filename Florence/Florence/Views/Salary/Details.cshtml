@@ -1,0 +1,163 @@
+﻿@model Florence.Salary
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Details <small>With all properties</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <form method="get" class="form-horizontal">
+                        @foreach (var property in Model.GetType().GetProperties().Where(x => !new string[] { "id", "DepartmentSID","CreatedBy" }.Contains(x.Name)))
+                        {
+                            <div class="form-group">
+                                @Html.Label(property.Name, new { @class = "col-lg-2 control-label" })
+                                @{
+                                    if (property.Name.Equals("id"))
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Model.id</p></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Html.Display(property.Name)</p></div>
+                                    }
+
+                                }
+
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                                    }
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
+</div>
+
+<div>
+    <h4>Salary</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SalaryType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SalaryType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Currency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Currency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaxRule)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaxRule)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeRate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeRate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AnnualGrossSalary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AnnualGrossSalary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MonthlyBasicSalary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MonthlyBasicSalary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AllowanceID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AllowanceID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Claims)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Claims)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Commissions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Commissions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Deductions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Deductions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaxDeductionAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaxDeductionAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaxDeductionPercentage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaxDeductionPercentage)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

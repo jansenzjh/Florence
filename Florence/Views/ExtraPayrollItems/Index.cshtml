@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Florence.ExtraPayrollItems>
+
+
+<div class="ibox-content">
+                    
+    <div class="col-lg-12">
+        <form role="form" class="form-inline">
+            @{
+                var count = Model.Count();
+                if (count < 5)
+                {
+                    count = 5;
+                }
+                else
+                {
+                    count = Model.Count() + 5;
+                }
+                <text>
+            <div class="row">
+                                    
+                <label for="ExtraItemLabel" class="col-lg-3">Title</label>
+                <label for="ExtraItemAmountLabel" class="col-lg-3">Amount</label>
+            </div>
+                </text>
+
+
+                for (int i = 0; i < count; i++)
+                {
+                    if (i < Model.Count())
+                    {
+                        var md = Model.ElementAt(i);
+                        <text>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="row extraItemsBlock">
+                                <div class="form-group col-lg-3">
+                                    <input id="" class="form-control extraItemTitle txt-string" type="text" name="" value="@md.PayrollItemName">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <input id="" class="form-control extraItemAmount txt-currency" type="text" name="" value="@md.Amount">
+                                </div>
+                            </div>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="row extraItemsBlock">
+                                <div class="form-group col-lg-3">
+                                    <input id="" class="form-control extraItemTitle txt-string" type="text" name="">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <input id="" class="form-control extraItemAmount txt-currency" type="text" name="">
+                                </div>
+                            </div>
+                        </text>
+                        }
+
+                    }
+                }
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-9">
+                    <input type="button" id="btnSaveExtraItems" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnSaveExtraItems").click(function () {
+            saveExtraPayrollItems();
+        });
+
+        //format currency
+        $(".txt-currency").kendoNumericTextBox({
+            format: "c",
+            decimals: 3
+        });
+        //format string
+        $(".txt-string").kendoMaskedTextBox({ });
+
+    });
+
+    function saveExtraPayrollItems() {
+        var extraItems = new Array();
+        $(".extraItemsBlock").each(function (i, e) {
+            var obj = {
+                PayrollItemName: $(e).find("input.extraItemTitle").val(),
+                Amount: $(e).find("input.extraItemAmount").val()
+            }
+            extraItems.push(obj);
+        });
+        
+        $.ajax({
+            type: "POST",
+            url: "/ExtraPayrollItems/SaveExtraItems",
+            data: {
+                objs: extraItems
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.BooleanResult) {
+                    
+                    toastr.success('Payroll Options Save Success!', 'Notification');
+                }
+            }
+        });
+        
+
+    }
+</script>

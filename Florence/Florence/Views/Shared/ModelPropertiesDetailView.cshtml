@@ -1,0 +1,22 @@
+﻿@model Object
+@{ 
+    var obj = ViewData["DetailsViewModel"];
+    var excludedProperties = ViewData["DetailsViewModelExcludedProperties"] as string[];
+}
+
+<div class="row">
+    <div class="col-lg-5">
+        <dl class="dl-horizontal">
+
+            @foreach (var property in Model.GetType().GetProperties())
+            {
+                if (!excludedProperties.Contains(property.Name))
+                {
+                    //property.PropertyType.Name
+                    <dt>@Html.Label(property.Name)</dt>
+                    <dd>@Html.Display(property.Name) </dd>
+                }
+            }
+        </dl>
+    </div>
+</div>

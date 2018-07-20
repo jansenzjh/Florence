@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Florence.RecruitmentCandidate>
+
+<div class="row">
+    @{
+        foreach (var cand in Model)
+        {
+            var bestDegree = cand.BestEduDegree();
+            var jobCount = new CandidateWorkExperience().CountFromExpression(x => x.LinkID == cand.LinkID);
+            var yearOfExp = cand.YearsOfExp();
+            var skillCount = new CandidateSkill().CountFromExpression(x => x.LinkID == cand.LinkID);
+            var langCount = new CandidateLanguage().CountFromExpression(x => x.LinkID == cand.LinkID);
+            <div class="col-lg-4">
+                <div class="widget-head-color-box navy-bg p-lg text-center">
+                    <div class="m-b-md">
+                        <h2 class="font-bold no-margins">
+                            @cand.Name
+                        </h2>
+                        <small>@cand.JobField</small>
+                    </div>
+                    
+                    <div>
+                        <span>Age: @string.Format("{0}", DateTime.Today.Year - cand.DOB.Year)</span> |
+                        <span>Exp: @string.Format("{0} years", yearOfExp)</span> |
+                        <span>Edu: @string.Format("{0}", bestDegree)</span>
+                    </div>
+                </div>
+                <div class="widget-text-box">
+                    <h4 class="media-heading">@string.Format("Score: {0}", cand.OverallScore())</h4>
+                    <p>@string.Format("{0} graduated with {1}, has {2} jobs and {3} years experiences, knowing {4} skills and {5} languages", cand.Name, bestDegree, jobCount, yearOfExp, skillCount, langCount)</p>
+                    <div class="text-right">
+                        <a class="btn btn-xs btn-white" href="@Url.Action("Details", new { id = cand.id})"><i class="fa fa-file-text"></i> Details </a>
+                        <a class="btn btn-xs btn-white btnRateCandidate" name="@cand.LinkID"><i class="fa fa-thumbs-up"></i> Rate </a>
+                        @*<a class="btn btn-xs btn-primary"><i class="fa fa-heart"></i> Love</a>*@
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".btnRateCandidate").click(function (e) {
+            createWindow(_addCandateRate, "Rate Candidate", "RecruitmentCandidate", "AddCandidateScore", "?linkID=" + e.currentTarget.name);
+        });
+
+    });
+</script>

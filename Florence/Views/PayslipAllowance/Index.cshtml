@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Florence.PayslipAllowance>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Index";
+    var gridName = Model.GetType().FullName + "Grid";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+
+</p>
+
+
+<div class="ibox-content">
+    <div class="row">
+        <div class="col-lg-11">
+            @Html.Grid(Model).Named(gridName).Columns(columns =>
+        {
+        var exceptionList = Florence.Models.GridColumnsExceptionModel.GetColumnException(Model.GetType().GetProperty("Item").PropertyType);
+
+        foreach (var prop in Model.GetType().GetProperty("Item").PropertyType.GetProperties().Where(x => !exceptionList.Contains(x.Name)))
+        {
+            if (prop.Name.Equals("id"))
+            {
+                columns.Add(x => x.id).Titled("id");
+            }
+            else
+            {
+                columns.Add(prop).Titled(DisplayNameHelper.GetDisplayName(prop));
+            }
+
+        }
+            columns.Add()
+                .Encoded(false)
+                .Sanitized(false)
+                .SetWidth(30)
+                .Titled("Edit")
+                .RenderValueAs(x => @<button class="btn btn-sm btnAllowanceEdit"  value="@x.id"><i class="fa fa-pencil"></i></button>);
+
+            columns.Add()
+                .Encoded(false)
+                .Sanitized(false)
+                .SetWidth(30)
+                .Titled("Delete")
+                .RenderValueAs(x => @<button class="btn btn-sm btnAllowanceDelete" value="@x.id"><i class="fa fa-trash"></i></button>);
+
+        }
+
+            ).WithPaging(20)
+        </div>
+
+    </div>
+
+    <input type="button" id="btnAllowanceCreate" value="Create" class="btn btn-default" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnAllowanceCreate").click(function (e) {
+            createWindow("allowanceCreateWin", "Create", "PayslipAllowance", "create", "");
+        });
+
+        $(".btnAllowanceEdit").click(function (e) {
+            createWindow("allowanceEditWin", "Edit", "PayslipAllowance", "Edit", "?id=" + this.value);
+        });
+
+        $(".btnAllowanceDelete").click(function (e) {
+            if (confirm("Delete this allowance?")) {
+                $.ajax({
+                    type: "POST",
+                    url: '/PayslipAllowance/Delete?id=' + this.value.toString(),
+                    success: function (data) {
+                        toastr.success('Allowance Save Success!', 'Notification');
+                        $("#payrollStructure-2").load('@(Url.Action("Index", "PayslipAllowance", null, Request.Url.Scheme))');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+            

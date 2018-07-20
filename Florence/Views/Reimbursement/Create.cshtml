@@ -1,0 +1,259 @@
+﻿@model Florence.Reimbursement
+
+@{
+    ViewBag.Title = "Create";
+    
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm("Create", "Reimbursement", FormMethod.Post, new { id = "ReimbursementForm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Reimbursement</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Employee, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Employee, new SelectList(Employee.GetAll(), "id", "FullName"), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Employee, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input class="txt-currency" id="Amount" name="OvertimeRate" value="@Model.Amount" />
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsApproved, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.IsApproved)
+                    @Html.ValidationMessageFor(model => model.IsApproved, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="detail-content">
+            <div class="row show-grid">
+
+                <div class="col-md-2">
+                    Date
+                </div>
+                <div class="col-md-2">
+                    Category
+                </div>
+                <div class="col-md-2">
+                    Item
+                </div>
+                <div class="col-md-2">
+                    ReceiptNumber
+                </div>
+                <div class="col-md-2">
+                    Location
+                </div>
+                <div class="col-md-2">
+                    Amount
+                </div>
+            </div>
+
+            <div class="detail-group">
+                @foreach (var dt in Model.Details)
+                {
+
+                    <div class="row show-grid reim-detail">
+                        <div class="col-md-2">
+                            <input class="txt-date" name="CreatedDate" value="@dt.CreatedDate" />
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownList("Category", new SelectList(ModelTypes.GetTypes(ModelTypesKeys.ReimbursementCategory), dt.Category))
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-string" name="Item" value="@dt.Item" />
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-string" name="ReceiptNumber" value="@dt.ReceiptNumber" />
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-string" name="Location" value="@dt.Location" />
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-currency" name="Amount" value="@dt.Amount" />
+                        </div>
+                    </div>
+
+                }
+                
+
+            </div>
+
+            <div class="backup-detail-row hidden">
+                <div class="row show-grid reim-detail">
+                    <div class="col-md-2">
+                        <input class="txt-date" name="CreatedDate" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DropDownList("Category", new SelectList(ModelTypes.GetTypes(ModelTypesKeys.ReimbursementCategory)))
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-string" name="Item" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-string" name="ReceiptNumber" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-string" name="Location" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="txt-currency" name="Amount" value="" />
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <button id="btnAddDetailRow" type="button" class="btn btn-primary btn-outline">Add</button>
+        </div>
+
+
+
+
+
+        <div class="form-group">
+            <div class="ibox-content no-padding">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+
+                @(Html.Kendo().EditorFor(x => x.Description)
+      .Name("Description")
+      .HtmlAttributes(new { style = "height:440px" })
+      .Resizable(resizable => resizable.Content(true).Toolbar(true))
+      .Value(HttpUtility.HtmlDecode(Model.Description))
+                )
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        
+
+        
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="btnReimbursementCreate" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    $(document).ready(function () {
+        //UI init
+        $("div select").kendoDropDownList({});
+        $("#Amount").kendoNumericTextBox({
+            format: "c",
+            decimals: 3
+        });
+       // $('#Description').summernote();
+
+        //format textbox
+        $(".detail-group .txt-currency").kendoNumericTextBox({
+            format: "c",
+            decimals: 3
+        });
+        $(".detail-group .txt-date").kendoDatePicker({});
+        $(".detail-group .txt-string").kendoMaskedTextBox({});
+
+        //Button Action
+        $("#btnAddDetailRow").click(function () {
+            //get the html
+            var html = $(".backup-detail-row").html();
+            
+            //get new uuid
+            var guid = Math.uuid();
+            //add uuid as new html class
+            var newHTML = $($(".backup-detail-row").html()).closest(".reim-detail").addClass(guid);
+
+            //append html with new class
+            $(".detail-group").append(newHTML);
+
+            //use new guid as new html class and format the telerik(sigh~~~~)
+            $(".{0} .txt-currency".format(guid.toString())).kendoNumericTextBox({
+                format: "c",
+                decimals: 3
+            });
+            $(".{0} .txt-date".format(guid.toString())).kendoDatePicker({});
+            $(".{0} .txt-string".format(guid.toString())).kendoMaskedTextBox({});
+
+            $(".{0} select".format(guid.toString())).kendoDropDownList({});
+
+        });
+
+        $("#btnReimbursementCreate").click(function () {
+            var linkID = Math.uuid();
+            var reim = {
+                InstanceID:linkID,
+                Employee: $("#Employee").val(),
+                Title: $("#Title").val(),
+                Description: $("#Description").code(),
+                IsApproved: $("#IsApproved").val(),
+                Amount: $("#ReimbursementForm #Amount").val()
+            }
+
+            var details = new Array();
+            $(".reim-detail").each(function (i, e) {
+                var obj = {
+                    InstanceID: linkID,
+                    CreatedDate: $(e).find("[name=CreatedDate]").val(),
+                    Amount: $(e).find("[name=Amount]").val(),
+                    Category: $(e).find("[name=Category]").val(),
+                    Item: $(e).find("[name=Item]").val(),
+                    ReceiptNumber: $(e).find("[name=ReceiptNumber]").val(),
+                    Location: $(e).find("[name=Location]").val(),
+                }
+                details.push(obj);
+            });
+            
+            details = Enumerable.From(details).Where(function (x) { return x.Amount > 0 }).ToArray();
+            $.ajax({
+                type: "POST",
+                url: '/Reimbursement/Create',
+                data: {
+                    model: reim,
+                    details: details
+                },
+                success: function (data) {
+                    console.log(data);
+                    //toastr.success("Audo Overtime Setting Save Successfully!", "Notification!");
+                    window.location.href = "/Reimbursement/Index";
+                }
+            });
+
+        });
+
+    });
+</script>

@@ -1,0 +1,134 @@
+﻿@model IEnumerable<Florence.AutoOvertime>
+
+@{
+    var defaultRowCount = 5;
+    var mdl = new AutoOvertime();
+    if (Model.Count() > 0)
+    {
+        mdl = Model.FirstOrDefault();
+    }
+}
+
+
+
+<div class="wrapper-content">
+
+
+    <div class="row show-grid">
+
+        <div class="col-md-2">
+            Minutes From
+        </div>
+        <div class="col-md-2">
+            Minutes To
+        </div>
+        <div class="col-md-2">
+            Type
+        </div>
+        <div class="col-md-2">
+            Overtime Amount
+        </div>
+    </div>
+
+    @foreach (var ao in Model)
+    {
+        <div class="row show-grid overtimeDetail">
+            <div class="col-md-2">
+                <input class="txt-integer" name="MinutesFrom" value="@ao.MinutesFrom" />
+            </div>
+            <div class="col-md-2">
+                <input class="txt-integer" name="MinutesTo" value="@ao.MinutesTo" />
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("OvertimeAmountType", new SelectList(new AutoAmountTypes().Types, ao.OvertimeAmountType))
+            </div>
+            <div class="col-md-2">
+                <input class="txt-currency" name="Amount" value="@ao.Amount" />
+            </div>
+        </div>
+    }
+    @{
+        if (defaultRowCount > Model.Count())
+        {
+            var diff = defaultRowCount - Model.Count();
+            for (int i = 0; i < diff; i++)
+            {
+                <text>
+
+                    <div class="row show-grid overtimeDetail">
+                        <div class="col-md-2">
+                            <input class="txt-integer" name="MinutesFrom" value="" />
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-integer" name="MinutesTo" value="" />
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownList("OvertimeAmountType", new SelectList(new AutoAmountTypes().Types))
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-currency" id="Amount" name="Amount" value="" />
+                        </div>
+                    </div>
+                </text>
+            }
+        }
+    }
+
+    <div class="row">
+        <button id="btnSaveAutoOvertime" type="button" class="btn btn-primary btn-outline">Save</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+        $("div select").kendoDropDownList({});
+
+        //format integer
+        $(".txt-integer").kendoNumericTextBox({});
+        //format currency
+        $(".txt-currency").kendoNumericTextBox({
+            format: "c",
+            decimals: 3
+        });
+
+        $("#btnSaveAutoOvertime").click(function () {
+            saveAutoOvertime();
+        });
+
+    });
+
+    function saveAutoOvertime() {
+        
+        var objs = new Array();
+        var gid = Math.uuid();
+
+        $(".overtimeDetail").each(function (i, e) {
+
+            var obj = {
+                MinutesFrom: parseInt($(e).find("[name=MinutesFrom]").val()),
+                MinutesTo: parseInt($(e).find("[name=MinutesTo]").val()),
+                OvertimeAmountType: $(e).find("[name=OvertimeAmountType]").val(),
+                Amount: parseFloat($("#Amount").val()),
+            }
+
+            objs.push(obj);
+
+        });
+
+        console.log(objs);
+        objs = Enumerable.From(objs).Where(function (x) { return x.MinutesFrom > 0 }).ToArray();
+        $.ajax({
+            type: "POST",
+            url: '/AutoOvertime/Save',
+            data: { objs: objs },
+            success: function (data) {
+                console.log(data);
+                toastr.success("Audo Overtime Setting Save Successfully!", "Notification!");
+
+            }
+        });
+
+
+    }
+</script>

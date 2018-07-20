@@ -1,0 +1,112 @@
+﻿@model Florence.SalaryCalculation
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>SalaryCalculation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludedBaseSalary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludedBaseSalary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeDeduction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeDeduction)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeBonus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeBonus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeCommission)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeCommission)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeAdjustment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeAdjustment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeReimbursement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeReimbursement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeOvertime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeOvertime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeProvidentFund)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeProvidentFund)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeAdvanceSalary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeAdvanceSalary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeLoan)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeLoan)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeInsurance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeInsurance)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

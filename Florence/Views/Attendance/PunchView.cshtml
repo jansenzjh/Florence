@@ -1,0 +1,205 @@
+﻿@model Florence.Attendance
+@{
+    var isWorkingOnProject = SessionItems.CurrentUser.IsWorkingOnProject();
+
+}
+<div class="">
+    <span class="m-r-sm text-muted welcome-message">Time Clock:</span><span id="clockTime" class="m-r-sm text-muted welcome-message">00:00:00</span>
+    <span class="m-r-sm text-muted welcome-message">Break Clock:</span><span id="breakTime" class="m-r-sm text-muted welcome-message">00:00:00</span>
+    <button id="clockIn" name="@AttendanceTypes.ClockIn.ToString()" type="button" class="btn btn-outline btn-primary navbar-btn punch-btn">Clock In</button>
+    <button id="clockOut" name="@AttendanceTypes.ClockOut.ToString()" type="button" class="btn btn-outline btn-primary navbar-btn punch-btn">Clock Out</button>
+    <button id="breakIn" name="@AttendanceTypes.BreakIn.ToString()" type="button" class="btn btn-outline btn-primary navbar-btn punch-btn">Break In</button>
+    <button id="breakOut" name="@AttendanceTypes.BreakOut.ToString()" type="button" class="btn btn-outline btn-primary navbar-btn punch-btn">Break Out</button>
+
+    <button id="btnProjectPunch" name="btnProjectPunch" type="button" class="btn btn-outline btn-primary navbar-btn"  data-toggle="modal" data-target="">Punch In</button>
+</div>
+
+@*@Html.Partial("~/Views/Project/ProjectPunchOutView.cshtml")*@
+
+
+<div class="modal inmodal" id="projPunchOutModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+@Html.Partial("~/Views/Project/ProjectPunchSelector.cshtml")
+
+
+
+<script>
+    _clockIntervalArr = new Array();
+    _breakIntervalArr = new Array();
+
+    $(document).ready(function () {
+        $(".punch-btn").click(function(){
+            updatePunch(this);
+            updateTimer(this);
+        });
+
+
+        enablePunchButton(@Html.Raw(Json.Encode(Model)));
+
+
+        var att = @Html.Raw(Json.Encode(Model));
+        var clockTime = new Date(parseInt(att.PunchDateTime.replace("/Date(", "").replace(")/",""), 10));
+        if (att == null || att.CurrentPunchType == "ClockOut"){
+
+        }else if(att.CurrentPunchType == "ClockIn"){
+
+            _clockIntervalArr.push(setInterval(displayTime, 1000, clockTime, "clockTime"));
+
+        }else if(att.CurrentPunchType == "BreakIn"){
+
+            var lastClockIn = Date.parse("@Attendance.GetLastPunchByType(SessionItems.CurrentUser.UserID, AttendanceTypes.ClockIn).PunchDateTime");
+            _clockIntervalArr.push(setInterval(displayTime, 1000, lastClockIn, "clockTime"));
+
+            var lastBreakIn = Date.parse("@Attendance.GetLastPunchByType(SessionItems.CurrentUser.UserID, AttendanceTypes.BreakIn).PunchDateTime");
+            _breakIntervalArr.push(setInterval(displayTime, 1000, lastBreakIn, "breakTime"));
+
+        }else if(att.CurrentPunchType == "BreakOut"){
+            $("#breakTime").text("00:00:00");
+            var lastClockIn = Date.parse("@Attendance.GetLastPunchByType(SessionItems.CurrentUser.UserID, AttendanceTypes.ClockIn).PunchDateTime");
+            _clockIntervalArr.push(setInterval(displayTime, 1000, lastClockIn, "clockTime"));
+        }
+
+        initProjectButton(@isWorkingOnProject.ToString().ToLower());
+    });
+
+    function initProjectButton(isWorking){
+        if(isWorking == true){
+            $("#btnProjectPunch").text("Punch Out Project");
+            $("#btnProjectPunch").attr("data-target", "#projPunchOutModal");
+            $("#btnProjectPunch").click(function(){
+                //punch out
+                loadProjectPunchOutView();
+
+            });
+        }else{
+            $("#btnProjectPunch").text("Punch into Project");
+            $("#btnProjectPunch").attr("data-target", "#projSelectorModal");
+            $("#btnProjectPunch").click(function(){
+                //punch in
+                console.log("not working proj");
+            });
+
+        }
+
+    }
+
+
+
+    function displayTime(lastTime, divId){
+
+        //var lastPunch = new Date(Date.parse("@Model.PunchDateTime"));
+        var current = new Date();
+        var diff = current - lastTime;
+
+        var msec = diff;
+        var hh = checkTime(Math.floor(msec / 1000 / 60 / 60));
+        msec -= hh * 1000 * 60 * 60;
+        var mm = checkTime(Math.floor(msec / 1000 / 60));
+        msec -= mm * 1000 * 60;
+        var ss = checkTime(Math.floor(msec / 1000));
+        msec -= ss * 1000;
+
+
+        //console.log()
+        $("#" + divId).text(hh + ":" + mm + ":" + ss);
+    }
+
+    function checkTime(i) {
+        if (i < 10) {i = "0" + i};
+        return i;
+    }
+
+    function updatePunch(element){
+        //ajax code
+        var att = @Html.Raw(Json.Encode(Model));
+        att.CurrentPunchType = element.name;
+
+        $.ajax({
+            type: 'POST',
+            url: '/Attendance/InsertPunch',
+            dataType: 'json',
+            data: {
+                attendance: att
+            },
+            success: function (data) {
+                console.log(att);
+                enablePunchButton(att);
+                if (att.CurrentPunchType == "ClockOut"){
+                    $(_clockIntervalArr).each(function(i, e){
+                        clearInterval(e);
+                    })
+                    $("#timepunchDiv").load('@(Url.Action("PunchView", "Attendance", null, Request.Url.Scheme))');
+                }
+            },
+            error: function (xhr, ajaxOptions, error) {
+                console.log(xhr.status);
+                console.log('Error: ' + xhr.responseText);
+            }
+        });
+
+
+    }
+
+    function updateTimer(element){
+        var CurrentPunchType = element.name;
+        if (CurrentPunchType == "ClockOut"){
+
+            $("#clockTime").val("");
+            $("#breakTime").val("");
+
+        }else if(CurrentPunchType == "ClockIn"){
+
+            _clockIntervalArr.push(setInterval(displayTime, 1000, new Date(), "clockTime"));
+
+        }else if(CurrentPunchType == "BreakIn"){
+
+            _breakIntervalArr.push(setInterval(displayTime, 1000, new Date(), "breakTime"));
+            //_clockIntervalArr.push(setInterval(displayTime, 1000, new Date(), "clockTime"));
+            //clear clock
+            $(_clockIntervalArr).each(function(i, e){
+                clearInterval(e);
+            });
+            //reassign clock
+            var lastClockIn = Date.parse("@Attendance.GetLastPunchByType(SessionItems.CurrentUser.UserID, AttendanceTypes.ClockIn).PunchDateTime");
+            _clockIntervalArr.push(setInterval(displayTime, 1000, lastClockIn, "clockTime"));
+
+        }else if(CurrentPunchType == "BreakOut"){
+            $("#breakTime").text("00:00:00");
+            //clear break
+            $(_breakIntervalArr).each(function(i, e){
+                clearInterval(e);
+            });
+            //clear clock
+            $(_clockIntervalArr).each(function(i, e){
+                clearInterval(e);
+            });
+            //reassign clock
+            var lastClockIn = Date.parse("@Attendance.GetLastPunchByType(SessionItems.CurrentUser.UserID, AttendanceTypes.ClockIn).PunchDateTime");
+            _clockIntervalArr.push(setInterval(displayTime, 1000, lastClockIn, "clockTime"));
+
+        }
+    }
+
+    function enablePunchButton(att){
+        if (att == null || att.CurrentPunchType == "ClockOut"){
+            $("#clockIn").removeClass("disabled");
+            $("#clockOut").addClass("disabled");
+            $("#breakIn").addClass("disabled");
+            $("#breakOut").addClass("disabled");
+        }else if(att.CurrentPunchType == "ClockIn"){
+            $("#clockIn").addClass("disabled");
+            $("#clockOut").removeClass("disabled");
+            $("#breakIn").removeClass("disabled");
+            $("#breakOut").addClass("disabled");
+        }else if(att.CurrentPunchType == "BreakIn"){
+            $("#clockIn").addClass("disabled");
+            $("#clockOut").addClass("disabled");
+            $("#breakIn").addClass("disabled");
+            $("#breakOut").removeClass("disabled");
+        }else if(att.CurrentPunchType == "BreakOut"){
+            $("#clockIn").addClass("disabled");
+            $("#clockOut").removeClass("disabled");
+            $("#breakIn").removeClass("disabled");
+            $("#breakOut").addClass("disabled");
+        }
+    }
+</script>

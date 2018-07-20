@@ -1,0 +1,102 @@
+﻿@model IEnumerable<Florence.WorkShift>
+
+@{
+    ViewBag.Title = "Create";
+    var workDays1 = new string[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+    var workDays = new string[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Create Work Shift <small>With all timing properties</small></h5>
+                </div>
+
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-1">Title: </div>
+                        <div class="col-md-4">
+                            <input type="text" id="WorkShiftTitle" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row show-grid">
+                        <div class="col-md-1">
+                            Work Days
+                        </div>
+                        <div class="col-md-2">
+                            Work From
+                        </div>
+                        <div class="col-md-2">
+                            Work To
+                        </div>
+                        <div class="col-md-2">
+                            Lunch From
+                        </div>
+                        <div class="col-md-2">
+                            Lunch To
+                        </div>
+                        <div class="col-md-3">
+                            Additional Break
+                        </div>
+                        
+                    </div>
+
+                    @{
+                        foreach (var workday in workDays)
+                        {
+                            <div class="row show-grid @workday">
+                                <div class="col-md-1">
+                                    <input type="checkbox" name="isWorkday" /> @workday
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="timePicker" name="workFrom" value="9:00 AM"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="timePicker" name="workTo" value="6:00 PM" />
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="timePicker" name="lunchFrom" value="12:00 PM" />
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="timePicker" name="lunchTo" value="1:00 PM" />
+                                </div>
+                                <div class="col-md-3">
+                                    <input syle="width:50px" class="timePicker" name="breakFrom" value="6:00 PM" />
+                                    <input syle="width:50px" class="timePicker" name="breakTo" value="10:00 PM" />
+                                </div>
+                            </div>
+                        }
+                    }
+
+
+                    <button id="btnInsertWorkShift" type="button" class="btn btn-primary btn-outline">Create</button>
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        genericInit();
+        $(".timePicker").kendoTimePicker();
+
+        $("#btnInsertWorkShift").click(function () {
+            InsertNewWorkShift();
+        });
+    });
+
+</script>
+
+<style>
+    [class= "k-widget k-timepicker k-header timePicker"] {
+    width:140px;
+}
+    [class*="col-"] {
+    height:50px;
+}
+</style>

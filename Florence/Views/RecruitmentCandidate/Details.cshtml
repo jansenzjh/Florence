@@ -1,0 +1,119 @@
+﻿@model Florence.RecruitmentCandidate
+@using GridMvc.Html
+
+@{
+    ViewBag.Title = "Details";
+    var edu = new CandidateEducation().GetObjectsValueFromExpression(x => x.LinkID == Model.LinkID);
+    var lang = new CandidateLanguage().GetObjectsValueFromExpression(x => x.LinkID == Model.LinkID);
+    var refe = new CandidateReference().GetObjectsValueFromExpression(x => x.LinkID == Model.LinkID);
+    var skill = new CandidateSkill().GetObjectsValueFromExpression(x => x.LinkID == Model.LinkID);
+    var train = new CandidateTraining().GetObjectsValueFromExpression(x => x.LinkID == Model.LinkID);
+    var work = new CandidateWorkExperience().GetObjectsValueFromExpression(x => x.LinkID == Model.LinkID);
+}
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Details <small>With all properties</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <form method="get" class="form-horizontal">
+                        @foreach (var property in Model.GetType().GetProperties().Where(x => !new string[] { "id", "LinkID" }.Contains(x.Name)))
+                        {
+                            <div class="form-group">
+                                @Html.Label(property.Name, new { @class = "col-lg-2 control-label" })
+                                @{
+                                    
+                                    <div class="col-lg-10"><p class="form-control-static">@Html.Display(property.Name)</p></div>
+
+                                }
+
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                          }
+
+                        
+                        @Html.Grid(edu).Named("edu").Columns(columns =>
+                       {
+                           foreach (var prop in edu.GetType().GetProperty("Item").PropertyType.GetProperties().Where(x => !new string[] { "id", "LinkID"}.Contains(x.Name)))
+                           {
+                               columns.Add(prop).Titled(DisplayNameHelper.GetDisplayName(prop));
+
+                           }
+
+                       }).WithPaging(20)
+                        <div class="hr-line-dashed"></div>
+
+                        @Html.Grid(lang).Named("lang").Columns(columns =>
+                   {
+                       foreach (var prop in lang.GetType().GetProperty("Item").PropertyType.GetProperties().Where(x => !new string[] { "id", "LinkID" }.Contains(x.Name)))
+                       {
+                           columns.Add(prop).Titled(DisplayNameHelper.GetDisplayName(prop));
+
+                       }
+                       
+                   }).WithPaging(20)
+
+                        <div class="hr-line-dashed"></div>
+
+                        @Html.Grid(skill).Named("skill").Columns(columns =>
+                   {
+                       foreach (var prop in skill.GetType().GetProperty("Item").PropertyType.GetProperties().Where(x => !new string[] { "id", "LinkID" }.Contains(x.Name)))
+                       {
+                           columns.Add(prop).Titled(DisplayNameHelper.GetDisplayName(prop));
+
+                       }
+
+                   }).WithPaging(20)
+
+                        <div class="hr-line-dashed"></div>
+
+                        @Html.Grid(train).Named("train").Columns(columns =>
+                   {
+                       foreach (var prop in train.GetType().GetProperty("Item").PropertyType.GetProperties().Where(x => !new string[] { "id", "LinkID" }.Contains(x.Name)))
+                       {
+                           columns.Add(prop).Titled(DisplayNameHelper.GetDisplayName(prop));
+
+                       }
+
+                   }).WithPaging(20)
+                        <div class="hr-line-dashed"></div>
+
+                        @Html.Grid(work).Named("work").Columns(columns =>
+                   {
+                       foreach (var prop in work.GetType().GetProperty("Item").PropertyType.GetProperties().Where(x => !new string[] { "id", "LinkID" }.Contains(x.Name)))
+                       {
+                           columns.Add(prop).Titled(DisplayNameHelper.GetDisplayName(prop));
+
+                       }
+
+                   }).WithPaging(20)
+                        <div class="hr-line-dashed"></div>
+
+                        @Html.Grid(refe).Named("refe").Columns(columns =>
+                   {
+                       foreach (var prop in refe.GetType().GetProperty("Item").PropertyType.GetProperties().Where(x => !new string[] { "id", "LinkID" }.Contains(x.Name)))
+                       {
+                           columns.Add(prop).Titled(DisplayNameHelper.GetDisplayName(prop));
+
+                       }
+
+                   }).WithPaging(20)
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
+</div>

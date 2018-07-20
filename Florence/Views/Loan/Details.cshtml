@@ -1,0 +1,52 @@
+﻿@model Florence.Loan
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Details <small>With all properties</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <form method="get" class="form-horizontal">
+                        @foreach (var property in Model.GetType().GetProperties().Where(x => !new string[] { "id", "DepartmentSID","CreatedBy" }.Contains(x.Name)))
+                        {
+                            <div class="form-group">
+                                @Html.Label(property.Name, new { @class = "col-lg-2 control-label" })
+                                @{
+                                    if (property.Name.Equals("Employee"))
+                                    {
+                                        <div class="col-lg-10">@Employee.GetName(Model.Employee)</div>
+                                    }
+                                    else if (property.Name.Equals("Description"))
+                                    {
+                                        <div class="col-lg-10">@Html.Raw(Model.Description)</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Html.Display(property.Name)</p></div>
+                                    }
+
+                                }
+
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                                    }
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
+</div>

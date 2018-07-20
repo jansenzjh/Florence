@@ -1,0 +1,147 @@
+﻿@model Florence.SalaryCalculation
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Details <small>With all properties</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <form method="get" class="form-horizontal">
+                        @foreach (var property in Model.GetType().GetProperties().Where(x => !new string[] { "id", "DepartmentSID","CreatedBy" }.Contains(x.Name)))
+                        {
+                            <div class="form-group">
+                                @Html.Label(property.Name, new { @class = "col-lg-2 control-label" })
+                                @{
+                                    if (property.Name.Equals("id"))
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Model.id</p></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-lg-10"><p class="form-control-static">@Html.Display(property.Name)</p></div>
+                                    }
+
+                                }
+
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                                    }
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
+</div>
+
+<div>
+    <h4>SalaryCalculation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludedBaseSalary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludedBaseSalary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeDeduction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeDeduction)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeBonus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeBonus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeCommission)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeCommission)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeAdjustment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeAdjustment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeReimbursement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeReimbursement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeOvertime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeOvertime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeProvidentFund)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeProvidentFund)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeAdvanceSalary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeAdvanceSalary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeLoan)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeLoan)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludeInsurance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludeInsurance)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

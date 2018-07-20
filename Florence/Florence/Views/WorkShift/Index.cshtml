@@ -1,0 +1,52 @@
+﻿
+@{ 
+    var workDays = new string[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Please Select Work Shifts<small>   Details will be showed up after selection</small></h5>
+
+                </div>
+
+
+
+                <div class="ibox-content">
+                    <div class="">
+                        @Html.DropDownList("WorkShiftDropdown", new SelectList(WorkShift.WorkShiftList(true)))
+                        <button id="btnCreateWorkShift" type="button" class="btn btn-success btn-outline">New Work Shift</button>
+                    </div>
+                    <div id="WorkShiftDetail">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#WorkShiftDropdown").kendoDropDownList({
+            change: WorkShiftDropdownOnChange
+        });
+        $("#btnCreateWorkShift").click(function () {
+            window.location.href = "@Url.Action("Create", "WorkShift")";
+        });
+    });
+
+    function WorkShiftDropdownOnChange(e) {
+        var title = encodeURIComponent($("#WorkShiftDropdown").val());
+        if (title.length > 0) {
+            $("#WorkShiftDetail").load('@(Url.Action("WorkShiftDetailView", "WorkShift", null, Request.Url.Scheme))?title=' + title);
+        }
+
+    }
+
+
+</script>

@@ -1,0 +1,144 @@
+﻿@model Florence.AutoDeduction
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>AutoDeduction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ForAbsence)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ForAbsence)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AbsenceAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AbsenceAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ForLeaveWithoutPay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ForLeaveWithoutPay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LeaveWithoutPayAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LeaveWithoutPayAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ForHalfDayLeave)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ForHalfDayLeave)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HalfDayLeaveAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HalfDayLeaveAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ForLateAttendance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ForLateAttendance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateMinutesFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateMinutesFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateMinutesTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateMinutesTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeductionAmountType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeductionAmountType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateMinutesFrom2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateMinutesFrom2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateMinutesTo2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateMinutesTo2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeductionAmountType2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeductionAmountType2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount2)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,96 @@
+﻿@model Florence.WorkShift
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>WorkShift</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.InstanceID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InstanceID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkShiftTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WorkShiftTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkDays)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WorkDays)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegularWorkHoursFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegularWorkHoursFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegularWorkHoursTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegularWorkHoursTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LunchBreakHoursFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LunchBreakHoursFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LunchBreakHoursTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LunchBreakHoursTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdditionalBreakHoursFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdditionalBreakHoursFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdditionalBreakHoursTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdditionalBreakHoursTo)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

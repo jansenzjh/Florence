@@ -1,0 +1,97 @@
+﻿
+@model IEnumerable<Florence.WorkShift>
+
+@{
+    ViewBag.Title = "Create";
+    var workDays = new string[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+}
+
+<div class="wrapper-content">
+
+    <button id="btnSaveWorkShift" type="button" class="btn btn-primary btn-outline">Save Current Work Shift</button>
+    <button id="btnDeleteWorkShift" type="button" class="btn btn-danger btn-outline">Delete Current Work Shift</button>
+
+
+    <div class="row show-grid">
+        <div class="col-md-1">
+            Work Days
+        </div>
+        <div class="col-md-2">
+            Work From
+        </div>
+        <div class="col-md-2">
+            Work To
+        </div>
+        <div class="col-md-2">
+            Lunch From
+        </div>
+        <div class="col-md-2">
+            Lunch To
+        </div>
+        <div class="col-md-3">
+            Additional Break
+        </div>
+
+    </div>
+
+    @{
+        var workTitle = Model.FirstOrDefault().WorkShiftTitle;
+        foreach (var workday in workDays)
+        {
+            var ws = Model.Where(x => x.WorkDays.Equals(workday)).FirstOrDefault();
+            if (ws == null)
+            {
+                ws = new WorkShift();
+            }
+            var isDaySelect = workday.Equals(ws.WorkDays);
+            <div class="row show-grid @ws.WorkDays">
+                <div class="col-md-1">
+                    <input type="checkbox" name="isWorkday" checked="@isDaySelect" /> @workday
+                </div>
+                <div class="col-md-2">
+                    <input class="timePicker" name="workFrom" value="@ws.RegularWorkHoursFrom.ToShortTimeString()" />
+                </div>
+                <div class="col-md-2">
+                    <input class="timePicker" name="workTo" value="@ws.RegularWorkHoursTo.ToShortTimeString()" />
+                </div>
+                <div class="col-md-2">
+                    <input class="timePicker" name="lunchFrom" value="@ws.LunchBreakHoursFrom.ToShortTimeString()" />
+                </div>
+                <div class="col-md-2">
+                    <input class="timePicker" name="lunchTo" value="@ws.LunchBreakHoursTo.ToShortTimeString()" />
+                </div>
+                <div class="col-md-3">
+                    <input syle="width:50px" class="timePicker" name="breakFrom" value="@ws.LunchBreakHoursFrom.ToShortTimeString()" />
+                    <input syle="width:50px" class="timePicker" name="breakTo" value="@ws.LunchBreakHoursTo.ToShortTimeString()" />
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $(".timePicker").kendoTimePicker();
+
+        $("#btnSaveWorkShift").click(function () {
+            saveWorkShift("@workTitle");
+        });
+        $("#btnDeleteWorkShift").click(function () {
+            deleteWorkShift("@workTitle");
+        });
+    });
+
+
+</script>
+
+<style>
+    [class= "k-widget k-timepicker k-header timePicker"] {
+        width: 140px;
+    }
+
+    [class*="col-"] {
+        height: 50px;
+    }
+</style>

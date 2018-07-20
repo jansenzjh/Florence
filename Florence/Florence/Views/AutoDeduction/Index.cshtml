@@ -1,0 +1,205 @@
+﻿@model IEnumerable<Florence.AutoDeduction>
+
+@{
+    var defaultRowCount = 5;
+    var mdl = new AutoDeduction();
+    if (Model.Count() > 0)
+    {
+        mdl = Model.FirstOrDefault();
+    }
+}
+
+<div class="wrapper-content">
+    
+    
+    <div class="row">
+        <div class="">
+            @Html.CheckBox("ForLateAttendance", mdl.ForLateAttendance) Apply Auto Deduction for Late Attendance
+        </div>
+    </div>
+    <div class="row show-grid">
+
+        <div class="col-md-2">
+            Minutes From
+        </div>
+        <div class="col-md-2">
+            Minutes To
+        </div>
+        <div class="col-md-2">
+            Type
+        </div>
+        <div class="col-md-2">
+            Deduction Amount
+        </div>
+    </div>
+
+    @foreach (var ad in Model)
+    {
+        <div class="row show-grid LateDetail">
+            <div class="col-md-2">
+                <input class="txt-integer" name="LateMinutesFrom" value="@ad.LateMinutesFrom" />
+            </div>
+            <div class="col-md-2">
+                <input class="txt-integer" name="LateMinutesTo" value="@ad.LateMinutesTo" />
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("LateAmountType", new SelectList(new AutoAmountTypes().Types, ad.LateAmountType))
+            </div>
+            <div class="col-md-2">
+                <input class="txt-currency" name="Amount" value="@ad.Amount" />
+            </div>
+        </div>
+    }
+    @{
+        if (defaultRowCount > Model.Count())
+        {
+            var diff = defaultRowCount - Model.Count();
+            for (int i = 0; i < diff; i++)
+            {
+                <text>
+
+                    <div class="row show-grid LateDetail">
+                        <div class="col-md-2">
+                            <input class="txt-integer" name="LateMinutesFrom" value="" />
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-integer" name="LateMinutesTo" value="" />
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownList("LateAmountType", new SelectList(new AutoAmountTypes().Types))
+                        </div>
+                        <div class="col-md-2">
+                            <input class="txt-currency" id="Amount" name="Amount" value="" />
+                        </div>
+                    </div>
+                </text>
+            }
+        }
+    }
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="row model-absence">
+
+                
+        <div class="col-md-3">
+            @Html.CheckBox("ForAbsence", mdl.ForAbsence) Apply Auto Deduction for Absence
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("AbsenceAmountType", new SelectList(new AutoAmountTypes().Types, mdl.AbsenceAmountType))
+        </div>
+        <div class="col-md-2">
+            <input class="txt-currency" name="AbsenceAmount" id="AbsenceAmount" value="@mdl.AbsenceAmount" />
+        </div>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="row model-leave-without-pay">
+
+                
+        <div class="col-md-3">
+            @Html.CheckBox("ForLeaveWithoutPay", mdl.ForLeaveWithoutPay) Apply Auto Deduction for Leave Without Pay
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("LeaveWithoutPayAmountType", new SelectList(new AutoAmountTypes().Types, mdl.LeaveWithoutPayAmountType))
+        </div>
+        <div class="col-md-2">
+            <input class="txt-currency" name="LeaveWithoutPayAmount" id="LeaveWithoutPayAmount" value="@mdl.LeaveWithoutPayAmount" />
+        </div>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="row model-half-day-leave">
+
+                
+        <div class="col-md-3">
+            @Html.CheckBox("ForHalfDayLeave", mdl.ForHalfDayLeave) Apply Auto Deduction for Half Day Leave
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("HalfDayLeaveAmountType", new SelectList(new AutoAmountTypes().Types, mdl.HalfDayLeaveAmountType))
+        </div>
+        <div class="col-md-2">
+            <input class="txt-currency" name="HalfDayLeaveAmount" id="HalfDayLeaveAmount" value="@mdl.HalfDayLeaveAmount" />
+        </div>
+
+    </div>
+
+    <div class="row">
+        <button id="btnSaveAutoDeduction" type="button" class="btn btn-primary btn-outline">Save</button>
+    </div>
+
+
+
+
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+        $("div select").kendoDropDownList({});
+
+        //format integer
+        $(".txt-integer").kendoNumericTextBox({ });
+        //format currency
+        $(".txt-currency").kendoNumericTextBox({
+            format: "c",
+            decimals: 3
+        });
+
+        $("#btnSaveAutoDeduction").click(function () {
+            saveAutoDeduction();
+        });
+    });
+
+    function saveAutoDeduction() {
+        var objs = new Array();
+        var gid = Math.uuid();
+
+        $(".LateDetail").each(function (i, e) {
+
+            
+            var obj = {
+                ForLateAttendance: $("#ForLateAttendance").prop("checked"),
+                LateMinutesFrom: parseInt($(e).find("[name=LateMinutesFrom]").val()),
+                LateMinutesTo: parseInt($(e).find("[name=LateMinutesTo]").val()),
+                LateAmountType: $(e).find("[name=LateAmountType]").val(),
+                Amount: parseFloat($(e).find("[name=Amount]").val()),
+
+                ForAbsence: $("#ForAbsence").prop("checked"),
+                AbsenceAmountType: $("#AbsenceAmountType").val(),
+                AbsenceAmount: parseFloat($("#AbsenceAmount").val()),
+
+                ForLeaveWithoutPay: $("#ForLeaveWithoutPay").prop("checked"),
+                LeaveWithoutPayAmountType: $("#LeaveWithoutPayAmountType").val(),
+                LeaveWithoutPayAmount: parseFloat($("#LeaveWithoutPayAmount").val()),
+
+                ForHalfDayLeave: $("#ForHalfDayLeave").prop("checked"),
+                HalfDayLeaveAmountType: $("#HalfDayLeaveAmountType").val(),
+                HalfDayLeaveAmount: parseFloat($("#HalfDayLeaveAmount").val()),
+                LinkID : gid
+            }
+            objs.push(obj);
+        });
+        console.log(objs);
+        objs = Enumerable.From(objs).Where(function (x) { return x.LateMinutesFrom > 0 }).ToArray();
+
+        $.ajax({
+            type: "POST",
+            url: '/AutoDeduction/Save',
+            data: { objs: objs },
+            success: function (data) {
+                console.log(data);
+                toastr.success("Audo Deduction Setting Save Successfully!", "Notification!");
+
+            }
+        });
+
+    }
+</script>

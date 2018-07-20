@@ -1,0 +1,21 @@
+﻿@model Object
+
+@{
+    var excludedProperties = ViewData["EditViewModelExcludedProperties"] as string[];
+}
+
+
+@foreach (var property in Model.GetType().GetProperties())
+{
+    if (!excludedProperties.Contains(property.Name))
+    {
+        
+        <div class="form-group">
+            @Html.Label(property.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Editor(property.Name, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessage(property.Name)
+            </div>
+        </div>
+    }
+}
